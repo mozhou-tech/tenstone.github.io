@@ -1,0 +1,840 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="刘远程" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="博弈论（英语：Game theory），又译为对策论，或者赛局理论，应用数学的一个分支。目前在生物学、经济学、国际关系、计算机科学、政治学、军事战略和其他很多学科都有广泛的应用。主要研究公式化了的激励结构（游戏或者博弈）间的相互作用。是研究具有斗争或竞争性质现象的数学理论和方法。 零和博弈 (Zero-Sum Game) 非合作博弈零和博弈（如果一方得益，另一方必然损失）表示所有博弈方的利益之和为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="博弈论与经济学">
+<meta property="og:url" content="http://tenstone.me/2016/05/11/finance/博弈论与经济学/index.html">
+<meta property="og:site_name" content="刘远程&#39;s BLOG">
+<meta property="og:description" content="博弈论（英语：Game theory），又译为对策论，或者赛局理论，应用数学的一个分支。目前在生物学、经济学、国际关系、计算机科学、政治学、军事战略和其他很多学科都有广泛的应用。主要研究公式化了的激励结构（游戏或者博弈）间的相互作用。是研究具有斗争或竞争性质现象的数学理论和方法。 零和博弈 (Zero-Sum Game) 非合作博弈零和博弈（如果一方得益，另一方必然损失）表示所有博弈方的利益之和为">
+<meta property="og:image" content="http://tenstone.me/images/2016/game_theory.png">
+<meta property="og:image" content="http://tenstone.me/images/2016/stochastic_game.png">
+<meta property="og:updated_time" content="2017-06-21T14:32:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="博弈论与经济学">
+<meta name="twitter:description" content="博弈论（英语：Game theory），又译为对策论，或者赛局理论，应用数学的一个分支。目前在生物学、经济学、国际关系、计算机科学、政治学、军事战略和其他很多学科都有广泛的应用。主要研究公式化了的激励结构（游戏或者博弈）间的相互作用。是研究具有斗争或竞争性质现象的数学理论和方法。 零和博弈 (Zero-Sum Game) 非合作博弈零和博弈（如果一方得益，另一方必然损失）表示所有博弈方的利益之和为">
+<meta name="twitter:image" content="http://tenstone.me/images/2016/game_theory.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'tenstone'
+    }
+  };
+</script>
+
+  <title> 博弈论与经济学 | 刘远程's BLOG </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">刘远程's BLOG</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">生活不止眼前的苟且，还有诗和远方</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                博弈论与经济学
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-05-11T17:52:47+08:00" content="2016-05-11">
+              2016-05-11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/11/finance/博弈论与经济学/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/11/finance/博弈论与经济学/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://zh.wikipedia.org/wiki/%E5%8D%9A%E5%BC%88%E8%AE%BA" target="_blank" rel="external">博弈论（英语：Game theory）</a>，又译为对策论，或者赛局理论，应用数学的一个分支。目前在生物学、经济学、国际关系、计算机科学、政治学、军事战略和其他很多学科都有广泛的应用。主要研究公式化了的激励结构（游戏或者博弈）间的相互作用。是研究具有斗争或竞争性质现象的数学理论和方法。<br><img src="/images/2016/game_theory.png" alt=""></p>
+<h3 id="零和博弈-zero-sum-game-非合作博弈"><a href="#零和博弈-Zero-Sum-Game-非合作博弈" class="headerlink" title="零和博弈 (Zero-Sum Game) 非合作博弈"></a><a href="https://zh.wikipedia.org/wiki/%E9%9B%B6%E5%92%8C%E5%8D%9A%E5%BC%88" target="_blank" rel="external">零和博弈 (Zero-Sum Game)</a> 非合作博弈</h3><p>零和博弈（如果一方得益，另一方必然损失）表示所有博弈方的利益之和为零或一个常数，即一方有所得，其他方必有所失。在零和博弈中，博弈各方是不合作的。</p>
+<h3 id="非零和博弈-cooperative-game-合作博弈"><a href="#非零和博弈-Cooperative-Game-合作博弈" class="headerlink" title="非零和博弈 (Cooperative Game) 合作博弈"></a><a href="http://wiki.mbalib.com/wiki/%E5%90%88%E4%BD%9C%E5%8D%9A%E5%BC%88" target="_blank" rel="external">非零和博弈 (Cooperative Game)</a> 合作博弈</h3><p>非零和博弈表示在不同策略组合下各博弈方的得益之和是不确定的变量，故又称之为变和博弈。</p>
+<h3 id="随机博弈-stochastic-game"><a href="#随机博弈-stochastic-game" class="headerlink" title="随机博弈 (stochastic game)"></a><a href="https://zh.wikipedia.org/wiki/%E9%9A%8F%E6%9C%BA%E5%8D%9A%E5%BC%88" target="_blank" rel="external">随机博弈 (stochastic game)</a></h3><p>这类博弈由一系列阶段组成。在博弈中每一阶段的起始，博弈处于某种特定状态。每一参与者选择某种行动，然后会获得取决于当前状态和所选择行动的收益。之后，博弈发展到下一阶段，处于一个新的随机状态，这一随机状态的分布取决于先前状态和各位参与者选择的行动。在新状态中重复上述过程，然后博弈继续进行有限或无限个数的阶段。一个参与者得到的总收益常用各阶段收益的贴现和，或是各阶段收益平均值的下极限来计算。</p>
+<p><img src="/images/2016/stochastic_game.png" alt=""><br>贴现因子为$\lambda （0&lt;\lambda \leq 1）$的贴现博弈$\Gamma<em>\lambda$ 中，参与者i 的收益是$\lambda \sum</em>{t=1}^{\infty}(1-\lambda)^{t-1}g^i_t$ 。n 阶段博弈中，参与者i 的收益是$\bar{g}^i<em>n:=\frac1n\sum</em>{t=1}^ng^i_t$ 。</p>
+<h3 id="重复博弈-repeated-game"><a href="#重复博弈-repeated-game" class="headerlink" title="重复博弈 (repeated game)"></a><a href="http://wiki.mbalib.com/wiki/%E9%87%8D%E5%A4%8D%E5%8D%9A%E5%BC%88" target="_blank" rel="external">重复博弈 (repeated game)</a></h3><p>重复博弈是指同样结构的博弈重复许多次，其中的每次博弈称为“阶段博弈”（stage games）。重复博弈是动态博弈中的重要内容，它可以是完全信息的重复博弈，也可以是不完全信息的重复博弈。</p>
+<h3 id="纳什均衡nash-equilibrium-非合作博弈均衡"><a href="#纳什均衡-Nash-equilibrium-非合作博弈均衡" class="headerlink" title="纳什均衡(Nash equilibrium) 非合作博弈均衡"></a><a href="http://wiki.mbalib.com/wiki/%E7%BA%B3%E4%BB%80%E5%9D%87%E8%A1%A1" target="_blank" rel="external">纳什均衡(Nash equilibrium)</a> 非合作博弈均衡</h3><p>纳什均衡点概念提供了一种非常重要的分析手段，使博弈论研究可以在一个博弈结构里寻找比较有意义的结果。</p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/11/finance/凯利方程式/" rel="next" title="凯利方程式">
+                <i class="fa fa-chevron-left"></i> 凯利方程式
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/13/finance/计量经济学/" rel="prev" title="计量经济学">
+                计量经济学 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/11/finance/博弈论与经济学/"
+           data-title="博弈论与经济学" data-url="http://tenstone.me/2016/05/11/finance/博弈论与经济学/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tenstone.me/images/2016/avatar.jpg"
+               alt="刘远程" />
+          <p class="site-author-name" itemprop="name">刘远程</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">60</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tenstone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/tenstone" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-houzz"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element">
+            <div class="links-of-blogroll-title">
+              <i class="fa fa-globe fa-fw"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://wiki.mbalib.com/" title="MBA Wiki" target="_blank">MBA Wiki</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://cn.nikkei.com/" title="NIKKEI News" target="_blank">NIKKEI News</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://cn.nikkei.com/" title="FT China" target="_blank">FT China</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.visualchina.com/" title="China Visual" target="_blank">China Visual</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ued.taobao.org/blog/" title="Taobao UED" target="_blank">Taobao UED</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.codinglabs.org/" title="Coding Labs" target="_blank">Coding Labs</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#零和博弈-zero-sum-game-非合作博弈"><span class="nav-number">1.</span> <span class="nav-text">零和博弈 (Zero-Sum Game) 非合作博弈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非零和博弈-cooperative-game-合作博弈"><span class="nav-number">2.</span> <span class="nav-text">非零和博弈 (Cooperative Game) 合作博弈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#随机博弈-stochastic-game"><span class="nav-number">3.</span> <span class="nav-text">随机博弈 (stochastic game)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重复博弈-repeated-game"><span class="nav-number">4.</span> <span class="nav-text">重复博弈 (repeated game)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#纳什均衡nash-equilibrium-非合作博弈均衡"><span class="nav-number">5.</span> <span class="nav-text">纳什均衡(Nash equilibrium) 非合作博弈均衡</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">刘远程</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=56585762" charset="UTF-8"></script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tenstone"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+
+</body>
+</html>

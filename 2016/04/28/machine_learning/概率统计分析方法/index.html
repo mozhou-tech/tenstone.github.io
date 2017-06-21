@@ -1,0 +1,894 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="金融预测,算法,机器学习,数学,Excel," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="最近在研究机器学习，大学时期作为一个特立独行的差等生一直以为数学不重要以后也用不到，现在发现我错了，好多概念都仅仅是听说过啊…一点印象都没有。现在写一个总结，以备不时之需。 [主要应用方向]：金融数据的统计学分析、蒙罗卡特方法实现智能行程设计 最小二乘法 (least square method)利用最小二乘法可以简便地求得未知的数据，并使得这些求得的数据与实际数据之间误差的平方和为最小。最小二乘">
+<meta name="keywords" content="金融预测,算法,机器学习,数学,Excel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概率统计分析方法">
+<meta property="og:url" content="http://tenstone.me/2016/04/28/machine_learning/概率统计分析方法/index.html">
+<meta property="og:site_name" content="刘远程&#39;s BLOG">
+<meta property="og:description" content="最近在研究机器学习，大学时期作为一个特立独行的差等生一直以为数学不重要以后也用不到，现在发现我错了，好多概念都仅仅是听说过啊…一点印象都没有。现在写一个总结，以备不时之需。 [主要应用方向]：金融数据的统计学分析、蒙罗卡特方法实现智能行程设计 最小二乘法 (least square method)利用最小二乘法可以简便地求得未知的数据，并使得这些求得的数据与实际数据之间误差的平方和为最小。最小二乘">
+<meta property="og:image" content="http://tenstone.me/images/2016/poisson_distribution.gif">
+<meta property="og:image" content="http://tenstone.me/images/2016/normal_distribution.jpg">
+<meta property="og:image" content="http://tenstone.me/images/2016/monte_carlo_paths_in_matlab.jpg">
+<meta property="og:image" content="http://tenstone.me/images/2016/stochastic_processes.png">
+<meta property="og:updated_time" content="2017-06-21T14:32:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="概率统计分析方法">
+<meta name="twitter:description" content="最近在研究机器学习，大学时期作为一个特立独行的差等生一直以为数学不重要以后也用不到，现在发现我错了，好多概念都仅仅是听说过啊…一点印象都没有。现在写一个总结，以备不时之需。 [主要应用方向]：金融数据的统计学分析、蒙罗卡特方法实现智能行程设计 最小二乘法 (least square method)利用最小二乘法可以简便地求得未知的数据，并使得这些求得的数据与实际数据之间误差的平方和为最小。最小二乘">
+<meta name="twitter:image" content="http://tenstone.me/images/2016/poisson_distribution.gif">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'tenstone'
+    }
+  };
+</script>
+
+  <title> 概率统计分析方法 | 刘远程's BLOG </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">刘远程's BLOG</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">生活不止眼前的苟且，还有诗和远方</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                概率统计分析方法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-04-28T09:32:21+08:00" content="2016-04-28">
+              2016-04-28
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/IT技术/" itemprop="url" rel="index">
+                    <span itemprop="name">IT技术</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/IT技术/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/28/machine_learning/概率统计分析方法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/28/machine_learning/概率统计分析方法/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在研究机器学习，大学时期作为一个特立独行的差等生一直以为数学不重要以后也用不到，现在发现我错了，好多概念都仅仅是听说过啊…一点印象都没有。现在写一个总结，以备不时之需。</p>
+<p>[主要应用方向]：金融数据的统计学分析、蒙罗卡特方法实现智能行程设计</p>
+<h3 id="最小二乘法-least-square-method"><a href="#最小二乘法-least-square-method" class="headerlink" title="最小二乘法 (least square method)"></a><a href="https://zh.wikipedia.org/wiki/%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95" target="_blank" rel="external">最小二乘法 (least square method)</a></h3><p>利用最小二乘法可以简便地求得未知的数据，并使得这些求得的数据与实际数据之间误差的平方和为最小。最小二乘法还可用于曲线拟合。其他一些优化问题也可通过最小化能量或最大化熵用最小二乘法来表达。</p>
+<h3 id="最大似然估计-maximum-likelihood-estimation"><a href="#最大似然估计-maximum-likelihood-estimation" class="headerlink" title="最大似然估计 (maximum likelihood estimation)"></a><a href="https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1" target="_blank" rel="external">最大似然估计 (maximum likelihood estimation)</a></h3><p>在统计学中，最大似然估计，也称为最大概似估计，是用来估计一个概率模型的参数的一种方法。</p>
+<h3 id="数学期望-mathematical-expectation"><a href="#数学期望-Mathematical-expectation" class="headerlink" title="数学期望 (Mathematical expectation)"></a><a href="https://zh.wikipedia.org/wiki/%E6%9C%9F%E6%9C%9B%E5%80%BC" target="_blank" rel="external">数学期望 (Mathematical expectation)</a></h3><p>在概率论和统计学中，一个离散性随机变量的期望值（或数学期望、或均值，亦简称期望，物理学中称为期待值）是试验中每次可能结果的概率乘以其结果的总和。换句话说，期望值是随机试验在同样的机会下重复多次的结果计算出的等同“期望”的平均值。需要注意的是，期望值并不一定等同于常识中的“期望”——“期望值”也许与每一个结果都不相等。（换句话说，期望值是该变量输出值的平均数。期望值并不一定包含于变量的输出值集合里。）</p>
+<h3 id="泊松分布-poisson-distribution"><a href="#泊松分布-Poisson-distribution" class="headerlink" title="泊松分布 (Poisson distribution)"></a><a href="https://zh.wikipedia.org/wiki/%E6%B3%8A%E6%9D%BE%E5%88%86%E4%BD%88" target="_blank" rel="external">泊松分布 (Poisson distribution)</a></h3><p>适合于描述单位时间内随机事件发生的次数的概率分布。如某一服务设施在一定时间内受到的服务请求的次数，电话交换机接到呼叫的次数、汽车站台的候客人数、机器出现的故障数、自然灾害发生的次数、DNA序列的变异数、放射性原子核的衰变数等等。<br><img src="/images/2016/poisson_distribution.gif" alt=""><br>泊松回归（英语：Poisson regression）是用来为计数资料和列联表建模的一种回归分析。泊松回归假设反应变量Y是泊松分布，并假设它期望值的对数可由一组未知参数进行线性表达。当其用于列联表分析时，泊松回归模型也被称作对数-线性模型。</p>
+<h3 id="正态分布-normal-distribution"><a href="#正态分布-normal-distribution" class="headerlink" title="正态分布 (normal distribution)"></a><a href="https://zh.wikipedia.org/wiki/%E6%AD%A3%E6%80%81%E5%88%86%E5%B8%83" target="_blank" rel="external">正态分布 (normal distribution)</a></h3><p>是一个在数学、物理及工程等领域都非常重要的概率分布，由于这个分布函数具有很多非常漂亮的性质，使得其在诸多涉及统计科学离散科学等领域的许多方面都有着重大的影响力。<br><img src="/images/2016/normal_distribution.jpg" alt=""></p>
+<h3 id="蒙特卡罗法-monte-carlo-method"><a href="#蒙特卡罗法-Monte-Carlo-method" class="headerlink" title="蒙特卡罗法 (Monte Carlo method)"></a><a href="https://zh.wikipedia.org/wiki/%E8%92%99%E5%9C%B0%E5%8D%A1%E7%BE%85%E6%96%B9%E6%B3%95" target="_blank" rel="external">蒙特卡罗法 (Monte Carlo method)</a></h3><p>一个用Excel实现蒙罗卡特方法的栗子：<br><a href="https://www.zhihu.com/question/28022345/answer/39067354" target="_blank" rel="external">https://www.zhihu.com/question/28022345/answer/39067354</a><br><img src="/images/2016/monte_carlo_paths_in_matlab.jpg" alt=""><br>蒙特卡罗方法又称统计模拟法、随机抽样技术，是一种随机模拟方法，以概率和统计理论方法为基础的一种计算方法，是使用随机数（或更常见的伪随机数）来解决很多计算问题的方法。将所求解的问题同一定的概率模型相联系，用电子计算机实现统计模拟或抽样，以获得问题的近似解。为象征性地表明这一方法的概率统计特征，故借用赌城蒙特卡罗命名。</p>
+<h4 id="相关概念蒙特卡洛树搜索"><a href="#相关概念：蒙特卡洛树搜索" class="headerlink" title="相关概念：蒙特卡洛树搜索"></a>相关概念：<a href="https://zh.wikipedia.org/wiki/%E8%92%99%E7%89%B9%E5%8D%A1%E6%B4%9B%E6%A0%91%E6%90%9C%E7%B4%A2" target="_blank" rel="external">蒙特卡洛树搜索</a></h4><p> 蒙特卡洛树搜索（英语：Monte Carlo tree search；简称：MCTS）是一种用于某些决策过程的启发式搜索算法，最引人注目的是在游戏中的使用。一个主要例子是电脑围棋程序，它也用于其他棋盘游戏、即时电子游戏以及不确定性游戏。</p>
+<h3 id="随机过程-stochastic-processes"><a href="#随机过程-stochastic-processes" class="headerlink" title="随机过程 (stochastic processes)"></a><a href="https://zh.wikipedia.org/wiki/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B" target="_blank" rel="external">随机过程 (stochastic processes)</a></h3><p>随机过程是随机变量的集合。若一随机系统的样本点是随机函数，则称此函数为样本函数，这一随机系统全部样本函数的集合是一个随机过程。实际应用中，样本函数的一般定义在时间域或者空间域。随机过程的实例如股票和汇率的波动、语音信号、视频信号、体温的变化，反对法随机运动如布朗运动、随机徘徊等等。<br><img src="/images/2016/stochastic_processes.png" alt=""></p>
+<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><blockquote>
+<p>随机过程<br>泊松过程 Poisson processes<br>更新过程 renewal processes<br>布朗运动 Brownian motion<br>仿射（跳跃）扩散过程 affine processes (or affine-jump diffusions)<br>列维过程 Levy processes<br>连续状态分枝过程 continuous state branching processes<br>随机微分方程 stochastic differential equations<br>半鞅 semimartingale<br>偏微分方程 partial differential equations<br>偏积分－微分方程 partial integro-differential equations<br>倒向随机微分方程 backward stochastic differential equations<br>二阶倒向随机微分方程 second order backward stochastic differential equations<br>随机偏微分方程 stochastic partial differential equations<br>随机最优控制 stochastic optimal control<br>极值建模 modeling of extremes<br>风险度量 risk measures<br>蒙特卡洛模拟 Monte Carlo simulation</p>
+</blockquote>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/金融预测/" rel="tag">#金融预测</a>
+          
+            <a href="/tags/算法/" rel="tag">#算法</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+            <a href="/tags/数学/" rel="tag">#数学</a>
+          
+            <a href="/tags/Excel/" rel="tag">#Excel</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/06/startup/科技主导经济形态/" rel="next" title="科技主导经济形态">
+                <i class="fa fa-chevron-left"></i> 科技主导经济形态
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/28/job/智能行程设计技术储备/" rel="prev" title="智能行程设计技术方案研究">
+                智能行程设计技术方案研究 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/04/28/machine_learning/概率统计分析方法/"
+           data-title="概率统计分析方法" data-url="http://tenstone.me/2016/04/28/machine_learning/概率统计分析方法/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tenstone.me/images/2016/avatar.jpg"
+               alt="刘远程" />
+          <p class="site-author-name" itemprop="name">刘远程</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">60</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tenstone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/tenstone" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-houzz"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element">
+            <div class="links-of-blogroll-title">
+              <i class="fa fa-globe fa-fw"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://wiki.mbalib.com/" title="MBA Wiki" target="_blank">MBA Wiki</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://cn.nikkei.com/" title="NIKKEI News" target="_blank">NIKKEI News</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://cn.nikkei.com/" title="FT China" target="_blank">FT China</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.visualchina.com/" title="China Visual" target="_blank">China Visual</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ued.taobao.org/blog/" title="Taobao UED" target="_blank">Taobao UED</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.codinglabs.org/" title="Coding Labs" target="_blank">Coding Labs</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#最小二乘法-least-square-method"><span class="nav-number">1.</span> <span class="nav-text">最小二乘法 (least square method)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最大似然估计-maximum-likelihood-estimation"><span class="nav-number">2.</span> <span class="nav-text">最大似然估计 (maximum likelihood estimation)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数学期望-mathematical-expectation"><span class="nav-number">3.</span> <span class="nav-text">数学期望 (Mathematical expectation)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#泊松分布-poisson-distribution"><span class="nav-number">4.</span> <span class="nav-text">泊松分布 (Poisson distribution)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正态分布-normal-distribution"><span class="nav-number">5.</span> <span class="nav-text">正态分布 (normal distribution)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#蒙特卡罗法-monte-carlo-method"><span class="nav-number">6.</span> <span class="nav-text">蒙特卡罗法 (Monte Carlo method)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#相关概念蒙特卡洛树搜索"><span class="nav-number">6.1.</span> <span class="nav-text">相关概念：蒙特卡洛树搜索</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#随机过程-stochastic-processes"><span class="nav-number">7.</span> <span class="nav-text">随机过程 (stochastic processes)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其它"><span class="nav-number">8.</span> <span class="nav-text">其它</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">刘远程</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=56585762" charset="UTF-8"></script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tenstone"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+
+</body>
+</html>

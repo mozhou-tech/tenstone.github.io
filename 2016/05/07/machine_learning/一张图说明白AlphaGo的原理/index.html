@@ -1,0 +1,873 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="算法,机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="AlphaGo总体上包含离线学习（图1上半部分）和在线对弈（图1下半部分）两个过程。 离线学习过程分为三个训练阶段。第一阶段：利用3万多幅专业棋手对局的棋谱来训练两个网络。一个是基于全局特征和深度卷积网络（CNN）训练出来的策略网络（Policy Network）。其主要作用是给定当前盘面状态作为输入，输出下一步棋在棋盘其它空地上的落子概率。另一个是利用局部特征和线性模型训练出来的快速走棋策略（">
+<meta name="keywords" content="算法,机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一张图说明白AlphaGo的原理">
+<meta property="og:url" content="http://tenstone.me/2016/05/07/machine_learning/一张图说明白AlphaGo的原理/index.html">
+<meta property="og:site_name" content="刘远程&#39;s BLOG">
+<meta property="og:description" content="AlphaGo总体上包含离线学习（图1上半部分）和在线对弈（图1下半部分）两个过程。 离线学习过程分为三个训练阶段。第一阶段：利用3万多幅专业棋手对局的棋谱来训练两个网络。一个是基于全局特征和深度卷积网络（CNN）训练出来的策略网络（Policy Network）。其主要作用是给定当前盘面状态作为输入，输出下一步棋在棋盘其它空地上的落子概率。另一个是利用局部特征和线性模型训练出来的快速走棋策略（">
+<meta property="og:image" content="http://tenstone.me/images/2016/alpha_go_theroy.jpg">
+<meta property="og:image" content="http://tenstone.me/images/2016/alphago_MCTS.jpg">
+<meta property="og:image" content="http://tenstone.me/images/2016/lishishi_alphago_4.jpg">
+<meta property="og:updated_time" content="2017-06-21T14:32:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一张图说明白AlphaGo的原理">
+<meta name="twitter:description" content="AlphaGo总体上包含离线学习（图1上半部分）和在线对弈（图1下半部分）两个过程。 离线学习过程分为三个训练阶段。第一阶段：利用3万多幅专业棋手对局的棋谱来训练两个网络。一个是基于全局特征和深度卷积网络（CNN）训练出来的策略网络（Policy Network）。其主要作用是给定当前盘面状态作为输入，输出下一步棋在棋盘其它空地上的落子概率。另一个是利用局部特征和线性模型训练出来的快速走棋策略（">
+<meta name="twitter:image" content="http://tenstone.me/images/2016/alpha_go_theroy.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'tenstone'
+    }
+  };
+</script>
+
+  <title> 一张图说明白AlphaGo的原理 | 刘远程's BLOG </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">刘远程's BLOG</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">生活不止眼前的苟且，还有诗和远方</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                一张图说明白AlphaGo的原理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-05-07T13:40:41+08:00" content="2016-05-07">
+              2016-05-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/07/machine_learning/一张图说明白AlphaGo的原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/07/machine_learning/一张图说明白AlphaGo的原理/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="/images/2016/alpha_go_theroy.jpg" alt=""></p>
+<p>AlphaGo总体上包含离线学习（图1上半部分）和在线对弈（图1下半部分）两个过程。</p>
+<p>离线学习过程分为三个训练阶段。<br>第一阶段：利用3万多幅专业棋手对局的棋谱来训练两个网络。一个是基于全局特征和深度卷积网络（CNN）训练出来的策略网络（Policy Network）。其主要作用是给定当前盘面状态作为输入，输出下一步棋在棋盘其它空地上的落子概率。另一个是利用局部特征和线性模型训练出来的快速走棋策略（Rollout Policy)。策略网络速度较慢，但精度较高；快速走棋策略反之。</p>
+<p>第二阶段：利用第t轮的策略网络与先前训练好的策略网络互相对弈，利用增强式学习来修正第t轮的策略网络的参数，最终得到增强的策略网络。这部分被很多“砖”家极大的鼓吹，但实际上应该存在理论上的瓶颈（提升能力有限）。这就好比2个6岁的小孩不断对弈，其水平就会达到职业9段？</p>
+<p>第三阶段：先利用普通的策略网络来生成棋局的前U-1步（U是一个属于[1, 450]的随机变量），然后利用随机采样来决定第U步的位置（这是为了增加棋的多样性，防止过拟合）。随后，利用增强的策略网络来完成后面的自我对弈过程，直至棋局结束分出胜负。此后，第U步的盘面作为特征输入，胜负作为label，学习一个价值网络（Value Network），用于判断结果的输赢概率。价值网络其实是AlphaGo的一大创新，围棋最为困难的就是很难根据当前的局势来判断最后的结果，这点职业棋手也很难掌握。通过大量的自我对弈，AlphaGo产生了3000万盘棋局，用作训练学习价值网络。但由于为其的搜索空间太大，3000万盘棋局也不能帮AlphaGo完全攻克这个问题。</p>
+<p>在线对弈过程包括以下5个关键步骤：其核心思想实在蒙特卡洛搜索树（MCTS）中嵌入了深度神经网络来减少搜索空间。AlphaGo并没有具备真正的思维能力。</p>
+<p>根据当前盘面已经落子的情况提取相应特征；<br>利用策略网络估计出棋盘其他空地的落子概率；<br>根据落子概率来计算此处往下发展的权重，初始值为落子概率本身（如0.18）。实际情况可能是一个以概率值为输入的函数，此处为了理解简便。<br>利用价值网络和快速走棋网络分别判断局势，两个局势得分相加为此处最后走棋获胜的得分。这里使用快速走棋策略是一个用速度来换取量的方法，从被判断的位置出发，快速行棋至最后，每一次行棋结束后都会有个输赢结果，然后综合统计这个节点对应的胜率。而价值网络只要根据当前的状态便可直接评估出最后的结果。两者各有优缺点、互补。<br>利用第四步计算的得分来更新之前那个走棋位置的权重（如从0.18变成了0.12）；此后，从权重最大的0.15那条边开始继续搜索和更新。这些权重的更新过程应该是可以并行的。当某个节点的被访问次数超过了一定的门限值，则在蒙特卡罗树上进一步展开下一级别的搜索（如图2所示）。</p>
+<p><img src="/images/2016/alphago_MCTS.jpg" alt=""><br>图2、MCTS拓展下一级节点</p>
+<p>AlphaGo的弱点在哪里？<br>攻其策略网络，加大搜索空间。进入中盘后，职业选手如能建立起比较复杂的局面，每一步棋都牵连很多个局部棋的命运（避免单块、局部作战），则AlphaGo需要搜索空间则急剧加大，短时间内得到的解的精度就会大打折扣。李世石九段的第四局棋就有这个意思。此处左右上下共5块黑白棋都相互关联到一起，白1下后，黑棋需要考虑很多地方。很多地方都需要在MCTS上进行跟深入的搜索。为了在一定的时间内有结果，只能放弃搜索精度。</p>
+<p><img src="/images/2016/lishishi_alphago_4.jpg" alt=""><br>图3、李世石对AlphaGo第四盘棋棋谱</p>
+<p>攻其价值网络，万劫不复：AlphaGo的价值网络极大的提高了之前单纯依靠MCTS来做局势判断的精度，但离准确判断围棋局势还有不小的差距。神经网络还不能完全避免在某些时候出现一些怪异（甚至错误）的判断，更何况其训练样本还远远不足。这也是为什么有了价值网络还仍然需要依靠快速走棋来判断局势。大家都曾经怀疑过AlphaGo的打劫能力，也感觉到了AlphaGo有躲避打劫的迹象。实际上南京大学的周志华教授曾经撰文指出打劫会让价值网络崩溃的问题，原理不再重复。总之打劫要乘早，太晚了搜索空间变小，即便价值网络失效，还可以靠快速走棋网络来弥补。开劫应该以在刚刚进入中盘时期为好（太早劫财还不够），并切保持长时间不消劫，最好在盘面上能同时有两处以上打劫。没有了价值网络的AlphaGo其实水平也就职业3段左右。</p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag">#算法</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/06/diary/耐心和等待/" rel="next" title="耐心和等待">
+                <i class="fa fa-chevron-left"></i> 耐心和等待
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/07/machine_learning/机器学习降维算法/" rel="prev" title="机器学习降维算法">
+                机器学习降维算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/07/machine_learning/一张图说明白AlphaGo的原理/"
+           data-title="一张图说明白AlphaGo的原理" data-url="http://tenstone.me/2016/05/07/machine_learning/一张图说明白AlphaGo的原理/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tenstone.me/images/2016/avatar.jpg"
+               alt="刘远程" />
+          <p class="site-author-name" itemprop="name">刘远程</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">60</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tenstone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/tenstone" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-houzz"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element">
+            <div class="links-of-blogroll-title">
+              <i class="fa fa-globe fa-fw"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://wiki.mbalib.com/" title="MBA Wiki" target="_blank">MBA Wiki</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://cn.nikkei.com/" title="NIKKEI News" target="_blank">NIKKEI News</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://cn.nikkei.com/" title="FT China" target="_blank">FT China</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.visualchina.com/" title="China Visual" target="_blank">China Visual</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ued.taobao.org/blog/" title="Taobao UED" target="_blank">Taobao UED</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.codinglabs.org/" title="Coding Labs" target="_blank">Coding Labs</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">This post does not have a Table of Contents</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">刘远程</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=56585762" charset="UTF-8"></script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tenstone"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+
+</body>
+</html>
